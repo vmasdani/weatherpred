@@ -1,0 +1,19 @@
+version: "3"
+services:
+  admin_frontend:
+    image: weatherpred_admin_frontend
+    restart: unless-stopped
+    ports:
+      - "#{admin_port}:80"
+
+  end_user:
+    image: weatherpred_end_user_frontend
+    restart: unless-stopped
+    ports:
+      - "#{end_user_port}:80"
+
+  backend:
+    image: alpine:3.17.0
+    restart: unless-stopped
+    ports:
+      - "#{backend_port}:80"

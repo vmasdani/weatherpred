@@ -1,0 +1,14 @@
+env:
+  dev:
+    end_user_port: 7000
+    admin_port: 7001
+    backend_port: 7002
+
+    base_url: http://172.17.0.1:7002
+
+  prod:
+    end_user_port: 7000
+    admin_port: 7001
+    backend_port: 7002
+
+    base_url: https://weatherpred.mydomain.com
