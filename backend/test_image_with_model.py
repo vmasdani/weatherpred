@@ -1,3 +1,9 @@
+# REQUIRED PACKAGES:
+# tensorflow==2.11.0
+# pillow==9.3.0
+# matplotlib==3.6.2
+# pandas==1.5.2
+
 import tensorflow as tf
 import keras
 from keras.models import Sequential
@@ -19,10 +25,10 @@ model = keras.models.load_model("./backend/model")
 #     image = load_img(pathForImage , target_size=(150,150))
 #     imgResult = img_to_array(image)
 #     imgResult = np.expand_dims(imgResult , axis = 0)
-#     imgResult = imgResult / 255. 
+#     imgResult = imgResult / 255.
 #     return imgResult
 
-testImagePath = input('Enter a file path to image: ') 
+testImagePath = input('Enter a file path to image: ')
 
 # prepare the image using our function
 # imgForModel = prepareImage(testImagePath)
@@ -30,14 +36,14 @@ testImagePath = input('Enter a file path to image: ')
 resultArray = predict_image_3c(
     model, testImagePath, pixels=PIXELS, show=True
 )
-print (resultArray)
+print(resultArray)
 
 flattenResultArray = np.round(resultArray * 100, 1).flatten()
-print (flattenResultArray)
+print(flattenResultArray)
 # the highest value is the predicted value and wee need the index in the resultArray
 answer = np.argmax(flattenResultArray, axis=0)
-print (answer)
+print(answer)
 
 # index = answer[0]
 
-print ("this image is : "+ categories[ answer ])
+print(categories[answer])
