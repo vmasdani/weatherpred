@@ -5,6 +5,8 @@ env:
     backend_port: 7002
 
     base_url: http://172.17.0.1:7002
+    scheduler_interval_secs: 300
+    predict_dummy: "yes"
 
   prod:
     end_user_port: 7000
@@ -12,3 +14,6 @@ env:
     backend_port: 7002
 
     base_url: https://weatherpred.mydomain.com
+    scheduler_interval_secs: 300
+    predict_dummy: "no"
+

@@ -6,11 +6,14 @@ ctx;
 <template>
   <div class="vh-100 vw-100 d-flex justify-content-center align-items-center">
     <div class="border border-dark shadow shadow-md p-3">
-      <div>
+      <!-- <div>
         <input class="form-control form-control-sm" placeholder="Username..." />
-      </div>
+      </div> -->
       <div>
-        <input class="form-control form-control-sm" placeholder="Password..." />
+        <input
+          class="form-control form-control-sm"
+          placeholder="Passphrase..."
+        />
       </div>
       <div>
         <div

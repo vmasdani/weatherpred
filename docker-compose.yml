@@ -13,7 +13,18 @@ services:
       - "7000:80"
 
   backend:
-    image: alpine:3.17.0
+    image: weatherpred_backend
     restart: unless-stopped
     ports:
-      - "7002:80"
+      - "7002:7002"
+    volumes:
+      - "./db/:/app/db/"
+      - "./files/:/app/files/"
+
+  scheduler:
+    image: weatherpred_scheduler
+    restart: unless-stopped
+    environment:
+      - "BACKEND_URL=http://172.17.0.1:7002"
+      - "SCHEDULER_INTERVAL=300"
+      - "PREDICT_DUMMY=yes"
