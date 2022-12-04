@@ -20,7 +20,7 @@ while True:
         if os.getenv('PREDICT_DUMMY') == 'yes':
             requests.get(f'{backend_url}/predict-dummy')
 
-    except:
+    except Exception as e:
         print(e)
 
     sleep_interval = os.getenv('SCHEDULER_INTERVAL')
