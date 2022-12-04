@@ -14,6 +14,7 @@ const handleSave = async () => {
         body: JSON.stringify(cameras.value),
       }
     );
+    window.location.reload();
   } catch (e) {
     console.error(e);
   }
