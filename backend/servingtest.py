@@ -1,59 +1,32 @@
-# import requests
-# import base64
-
-# def main():
-#   image_string = base64.urlsafe_b64encode(open("backend/model/1/testimages/UMN-Kampus-Hijau.jpg", "rb").read())
-
-#   endpoint = "http://127.0.0.1:8500"
-#   json_data = {"model_name": "cnnmodel", "data": {"images": [image_string]} }
-#   result = requests.post(endpoint, json=json_data)
-#   print(result)
-
-# if __name__ == "__main__":
-#   main()
-
-from __future__ import print_function
-
-import base64
-import requests
 import numpy as np
-import matplotlib.pyplot as plt
-
-# The server URL specifies the endpoint of your server running the ResNet
-# model with the name "resnet" and using the predict interface.
-SERVER_URL = 'http://localhost:8501/v1/models/cnnmodel:predict'
-
-# The image URL is the location of the image we should send to the server
-IMAGE_URL = 'https://tensorflow.org/images/blogs/serving/cat.jpg'
-
-
+from PIL import Image
+import requests
+import json
+    
 def main():
-  # Download the image
-  dl_request = requests.get(IMAGE_URL, stream=True)
-  dl_request.raise_for_status()
+  pixels = 200
+  image_file = 'backend/model/1/testimages/test7.jpg'
+  categories = ["sunny", "cloudy", "foggy", "rainy", "snowy"]
+  # Convert arbitrary sized jpeg image to 200x200 b/w image.
+  img = Image.open(image_file)
+    
+  # convert into gray and resize
+  img = img.convert("RGB").resize((pixels, pixels))
+  # scale pixel values out of 256 values
+  img_array = np.asarray(img) / 255
 
-  # Compose a JSON Predict request (send JPEG image in base64).
-  img_array = np.asarray(img).flatten() / 255
-  jpeg_bytes = base64.b64encode(dl_request.content).decode('utf-8')
-  predict_request = '{"instances" : [{"b64": "%s"}]}' % jpeg_bytes
-
-  # Send few requests to warm-up the model.
-  for _ in range(3):
-    response = requests.post(SERVER_URL, data=predict_request)
-    response.raise_for_status()
-
-  # Send few actual requests and report average latency.
-  total_time = 0
-  num_requests = 10
-  for _ in range(num_requests):
-    response = requests.post(SERVER_URL, data=predict_request)
-    response.raise_for_status()
-    total_time += response.elapsed.total_seconds()
-    prediction = response.json()['predictions'][0]
-
-  print('Prediction class: {}, avg latency: {} ms'.format(
-      prediction['classes'], (total_time*1000)/num_requests))
-
-
-if __name__ == '__main__':
-  main()
+  # reashape to feed it in the CNN
+  img_array = img_array.reshape((1, pixels, pixels, 3))
+  img_array = img_array.astype(float)
+  # print(img_array)
+  # Dump jpeg image bytes as 200x200 tensor
+  np.set_printoptions(threshold=np.inf)       
+  json_request = '{{ "instances" : {} }}'.format(np.array2string(img_array, separator=',', formatter={'float':lambda x: "%.1f" % x}))
+  resp = requests.post('http://localhost:8501/v1/models/cnnmodel:predict', data=json_request)
+  # print('response.status_code: {}'.format(resp.status_code))     
+  # print('response.content: {}'.format(resp.content))
+  jsonResult = json.loads(resp.content)
+  answer = np.argmax(jsonResult, axis=0)
+  # print(answer)
+  print(categories[answer])
+main()

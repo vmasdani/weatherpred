@@ -38,7 +38,7 @@ if args.action == 'run':
         ('docker build -t weatherpred_backend -f Dockerfile.backend .', '.'),
         ('docker build -t weatherpred_admin_frontend -f Dockerfile.admin .', '.'),
         ('docker build -t weatherpred_end_user_frontend -f Dockerfile.end_user .', '.'),
-        ('docker-compose up', '.'),
+        ('docker compose up', '.'),
     ]
 
     for (c, cwd) in steps:
