@@ -3,18 +3,21 @@ services:
   admin_frontend:
     image: weatherpred_admin_frontend
     restart: unless-stopped
+    network_mode: host
     ports:
       - "7001:80"
 
   end_user:
     image: weatherpred_end_user_frontend
     restart: unless-stopped
+    network_mode: host
     ports:
       - "7000:80"
 
   backend:
     image: weatherpred_backend
     restart: unless-stopped
+    network_mode: host
     ports:
       - "7002:7002"
     volumes:
@@ -24,7 +27,8 @@ services:
   scheduler:
     image: weatherpred_scheduler
     restart: unless-stopped
+    network_mode: host
     environment:
-      - "BACKEND_URL=http://172.17.0.1:7002"
+      - "BACKEND_URL=localhost:7002"
       - "SCHEDULER_INTERVAL=300"
       - "PREDICT_DUMMY=yes"

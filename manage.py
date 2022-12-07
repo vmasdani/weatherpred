@@ -35,7 +35,7 @@ process_template_file('./templates/docker-compose-template.yml', './docker-compo
 if args.action == 'run':
     steps = [
         ('docker build -t weatherpred_scheduler -f Dockerfile.scheduler .', '.'),
-        ('docker build -t weatherpred_backend -f Dockerfile.backend .', '.'),
+        ('docker build --no-cache -t weatherpred_backend -f Dockerfile.backend .', '.'),
         ('docker build -t weatherpred_admin_frontend -f Dockerfile.admin .', '.'),
         ('docker build -t weatherpred_end_user_frontend -f Dockerfile.end_user .', '.'),
         ('docker compose up', '.'),
