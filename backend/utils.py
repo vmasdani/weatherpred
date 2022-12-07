@@ -1,7 +1,12 @@
 """
     Some utilities support  the ML and DL proccessing
 """
-
+import tensorflow as tf
+import keras
+from keras.models import Sequential
+from keras.models import Model
+from keras.preprocessing import image
+from tensorflow.keras.utils import load_img, img_to_array
 import os
 import sys
 from pathlib import Path
@@ -146,13 +151,14 @@ def predict_image(
 
 
 def predict_image_3c(
-    model, file: str, pixels: int = 50, show: bool = False
+    file: str, pixels: int = 50, show: bool = False
 ) -> str:
+
     """Return the prediction of the `file` image
     with 3 channels, for CNN."""
-
+    model = keras.models.load_model("./backend/model")
     img = Image.open(file)
-
+    
     # convert into gray and resize
     img = img.convert("RGB").resize((pixels, pixels))
     # scale pixel values out of 256 values

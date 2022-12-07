@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 PIXELS = 200
 categories = ["sunny", "cloudy", "foggy", "rainy", "snowy"]
 
-model = keras.models.load_model("./backend/model")
+# model = keras.models.load_model("./backend/model")
 
 # def prepareImage(pathForImage):
 #     image = load_img(pathForImage , target_size=(150,150))
@@ -34,7 +34,7 @@ testImagePath = input('Enter a file path to image: ')
 # imgForModel = prepareImage(testImagePath)
 
 resultArray = predict_image_3c(
-    model, testImagePath, pixels=PIXELS, show=True
+    testImagePath, pixels=PIXELS, show=True
 )
 print(resultArray)
 

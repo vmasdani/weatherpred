@@ -12,6 +12,11 @@ from flask import jsonify, make_response, request, send_file
 from flask_cors import CORS
 from db import Snapshot, session, Camera
 from dto import SnapshotEndpoint
+import tempfile
+import numpy as np
+from utils import (
+    predict_image_3c,
+)
 
 # if args.type == 'exec':
 app = flask.Flask(__name__)
@@ -106,17 +111,32 @@ def predict_dummy_endpoint():
 
 
 def actual_predict(img_bytes: str):
-    # Placeholder prediction
-    rn = random.randint(0, 2)
+    temp = tempfile.NamedTemporaryFile(suffix='.jpg', prefix=os.path.basename(__file__))
+    temp.write(img_bytes)
+    temp.seek(0)
 
-    if rn == 0:
-        return 'sunny'
-    elif rn == 1:
-        return 'cloudy'
-    elif rn == 2:
-        return 'rainy'
-    else:
-        return None
+    PIXELS = 200
+    categories = ["sunny", "cloudy", "foggy", "rainy", "snowy"]
+    testImagePath = os.path.dirname(temp.name)
+    resultArray = predict_image_3c(
+        testImagePath, pixels=PIXELS, show=True
+    )
+    temp.close()
+    flattenResultArray = np.round(resultArray * 100, 1).flatten()
+    answer = np.argmax(flattenResultArray, axis=0)
+    
+    return categories[answer]
+    # # Placeholder prediction
+    # rn = random.randint(0, 2)
+
+    # if rn == 0:
+    #     return 'sunny'
+    # elif rn == 1:
+    #     return 'cloudy'
+    # elif rn == 2:
+    #     return 'rainy'
+    # else:
+    #     return None
 
 
 def dummy_predict():
