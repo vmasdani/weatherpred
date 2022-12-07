@@ -17,10 +17,6 @@ from PIL import Image
 import requests
 import json
 import numpy as np
-from utils import (
-    predict_image_3c,
-)
-
 # if args.type == 'exec':
 app = flask.Flask(__name__)
 CORS(app)

@@ -2,6 +2,7 @@ FROM python:3.9.15-alpine3.17
 
 WORKDIR /app
 COPY backend/. .
+RUN --mount=type=cache,target=/root/.cache python3 -m pip install --extra-index-url https://alpine-wheels.github.io/index numpy
 RUN --mount=type=cache,target=/root/.cache python3 -m pip install -r requirements.txt
 RUN python -m alembic upgrade head
 RUN apk add --no-cache tzdata
