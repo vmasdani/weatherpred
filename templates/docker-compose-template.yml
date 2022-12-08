@@ -29,3 +29,15 @@ services:
       - "BACKEND_URL=#{base_url}"
       - "SCHEDULER_INTERVAL=#{scheduler_interval_secs}"
       - "PREDICT_DUMMY=#{predict_dummy}"
+
+  tensorflow-serving-backend:
+    image: tensorflow/serving:latest-gpu
+    restart: unless-stopped
+    ports:
+      - 8500:8500
+      - 8501:8501
+    volumes:
+      - ./backend/model:/models/cnnmodel 
+    network_mode: "host"
+    environment:
+      - "MODEL_NAME=cnnmodel"
