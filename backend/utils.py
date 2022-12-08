@@ -156,7 +156,7 @@ def predict_image_3c(
 
     """Return the prediction of the `file` image
     with 3 channels, for CNN."""
-    model = keras.models.load_model("./backend/model")
+    model = keras.models.load_model("./backend/model/1/")
     img = Image.open(file)
     
     # convert into gray and resize
@@ -169,5 +169,5 @@ def predict_image_3c(
 
     # reashape to feed it in the CNN
     img_array = img_array.reshape((1, pixels, pixels, 3))
-
+    print (img_array)
     return model.predict(img_array, verbose=False)

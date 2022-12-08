@@ -28,7 +28,8 @@ categories = ["sunny", "cloudy", "foggy", "rainy", "snowy"]
 #     imgResult = imgResult / 255.
 #     return imgResult
 
-testImagePath = input('Enter a file path to image: ')
+testImagePath = 'backend/model/1/testimages/test6.jpg'
+# input('Enter a file path to image: ')
 
 # prepare the image using our function
 # imgForModel = prepareImage(testImagePath)

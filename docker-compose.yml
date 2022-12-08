@@ -15,6 +15,7 @@ services:
   backend:
     image: weatherpred_backend
     restart: unless-stopped
+    network_mode: "host"
     ports:
       - "7002:7002"
     volumes:
@@ -25,6 +26,6 @@ services:
     image: weatherpred_scheduler
     restart: unless-stopped
     environment:
-      - "BACKEND_URL=http://172.17.0.1:7002"
+      - "BACKEND_URL=http://localhost:7002"
       - "SCHEDULER_INTERVAL=300"
       - "PREDICT_DUMMY=yes"

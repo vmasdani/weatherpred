@@ -15,6 +15,7 @@ services:
   backend:
     image: weatherpred_backend
     restart: unless-stopped
+    network_mode: "host"
     ports:
       - "#{backend_port}:7002"
     volumes:

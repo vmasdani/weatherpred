@@ -20,7 +20,17 @@ import numpy as np
 # if args.type == 'exec':
 app = flask.Flask(__name__)
 CORS(app)
+PIXELS = 200
 
+class NpEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
 
 @app.route('/')
 def hello():
@@ -110,35 +120,41 @@ def predict_dummy_endpoint():
 
 
 def actual_predict(img_bytes: str):
-    temp = tempfile.NamedTemporaryFile(suffix='.jpg', prefix=os.path.basename(__file__))
+    temp = tempfile.NamedTemporaryFile(
+        suffix='.jpg', prefix=os.path.basename(__file__))
     temp.write(img_bytes)
     temp.seek(0)
 
-    pixels = 200
     image_file = temp
-    categories = ["sunny", "cloudy", "foggy", "rainy", "snowy"]
     # Convert arbitrary sized jpeg image to 200x200 b/w image.
     img = Image.open(image_file)
-        
+
+    categories = ["sunny", "cloudy", "foggy", "rainy", "snowy"]
+
+    # Convert arbitrary sized jpeg image to 200x200 b/w image.
+    img = Image.open(image_file)
     # convert into gray and resize
-    img = img.convert("RGB").resize((pixels, pixels))
+    img = img.convert("RGB").resize((PIXELS, PIXELS))
     # scale pixel values out of 256 values
     img_array = np.asarray(img) / 255
-
     # reashape to feed it in the CNN
-    img_array = img_array.reshape((1, pixels, pixels, 3))
-    img_array = img_array.astype(float)
-    # print(img_array)
-    # Dump jpeg image bytes as 200x200 tensor
-    np.set_printoptions(threshold=np.inf)       
-    json_request = '{{ "instances" : {} }}'.format(np.array2string(img_array, separator=',', formatter={'float':lambda x: "%.1f" % x}))
-    resp = requests.post('http://localhost:8501/v1/models/cnnmodel:predict', data=json_request)
-    # print('response.status_code: {}'.format(resp.status_code))     
-    # print('response.content: {}'.format(resp.content))
+    img_array = img_array.reshape((1, PIXELS, PIXELS, 3))
+    # dumping the result to json to send
+    json_request = json.dumps({'instances': img_array}, cls=NpEncoder)
+    # sending request to TensorFlow Serving, and the response
+    resp = requests.post(
+        'http://localhost:8501/v1/models/cnnmodel:predict', data=json_request)
+    print('response.status_code: {}'.format(resp.status_code))
+    print('response.content: {}'.format(resp.content))
+    # loads the result
     jsonResult = json.loads(resp.content)
-    answer = np.argmax(jsonResult, axis=0)
-    # print(answer)
+    # Convert LIST to nparray so that it multiplies correctly, this took me like 4 hours to figure out, god damn it.
+    convertedResultArray = np.asarray(jsonResult['predictions'])
+    flattenResultArray = np.round(convertedResultArray * 100, 1).flatten()
+    answer = np.argmax(flattenResultArray, axis=0)
+    temp.close()
     return(categories[answer])
+    
 
 
 def dummy_predict():
