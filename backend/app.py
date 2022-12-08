@@ -22,6 +22,7 @@ app = flask.Flask(__name__)
 CORS(app)
 PIXELS = 200
 
+
 class NpEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.integer):
@@ -31,6 +32,7 @@ class NpEncoder(json.JSONEncoder):
         if isinstance(obj, np.ndarray):
             return obj.tolist()
         return json.JSONEncoder.default(self, obj)
+
 
 @app.route('/')
 def hello():
@@ -153,8 +155,7 @@ def actual_predict(img_bytes: str):
     flattenResultArray = np.round(convertedResultArray * 100, 1).flatten()
     answer = np.argmax(flattenResultArray, axis=0)
     temp.close()
-    return(categories[answer])
-    
+    return (categories[answer])
 
 
 def dummy_predict():

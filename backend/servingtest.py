@@ -30,12 +30,12 @@ def main():
     img_array = img_array.reshape((1, PIXELS, PIXELS, 3))
     # dumping the result to json to send
     json_request = json.dumps({'instances': img_array}, cls=NpEncoder)
-    # sending request to TensorFlow Serving, and the response 
+    # sending request to TensorFlow Serving, and the response
     resp = requests.post(
         'http://localhost:8501/v1/models/cnnmodel:predict', data=json_request)
     print('response.status_code: {}'.format(resp.status_code))
     print('response.content: {}'.format(resp.content))
-    #loads the result 
+    # loads the result
     jsonResult = json.loads(resp.content)
     # Convert LIST to nparray so that it multiplies correctly, this took me like 4 hours to figure out, god damn it. -Fahre
     convertedResultArray = np.asarray(jsonResult['predictions'])
