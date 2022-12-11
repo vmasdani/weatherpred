@@ -13,7 +13,7 @@ PIXELS = 200
 #     return base64.b64encode(frame)
 def capture():
     image_base_64 = ''
-    cap = cv.VideoCapture("rtsp://180.244.98.124:64000/h264_pcm.sdp")
+    cap = cv.VideoCapture("192.168.1.266")
     while(cap.isOpened()):
         ret, frame = cap.read()
         if ret==True:
@@ -25,10 +25,9 @@ def capture():
             image_base_64 = base64.b64encode(encodedFrame)
             # print(image_base_64)
             cap.release()
-            return image_base_64
-        else:
-            print(f'No camera result detected for camera.')
-            break
+            predict(image_base_64)
+    else:
+        print(f'Camera URL not valid.')
 
 class NpEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -41,12 +40,11 @@ class NpEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-def main():
+def predict(b64capture: str):
 
     categories = ["sunny", "cloudy", "foggy", "rainy", "snowy"]
 
     # Convert arbitrary sized jpeg image to 200x200 b/w image.
-    b64capture = capture()
     # print(b64capture)
     img_bytes = base64.b64decode(b64capture) 
     print(img_bytes)
@@ -77,4 +75,4 @@ def main():
     print(categories[answer])
 
 
-main()
+capture()

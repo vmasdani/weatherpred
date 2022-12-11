@@ -232,11 +232,7 @@ def predict_scheduler(dummy=False):
                     image_base_64=image_base_64
                 )
                 cap.release()
-            else:
-                print(f'No camera result detected for camera {c.id}. Skipping.')
-                break
+        else:
+            print(f'No camera result detected for camera {c.id}. Skipping.')
     
-
-
-
 app.run('0.0.0.0', 7002)
