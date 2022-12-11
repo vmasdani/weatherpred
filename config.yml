@@ -6,7 +6,7 @@ env:
 
     base_url: http://localhost:7002
     scheduler_interval_secs: 300
-    predict_dummy: "yes"
+    predict_dummy: "no"
 
   prod:
     end_user_port: 7000

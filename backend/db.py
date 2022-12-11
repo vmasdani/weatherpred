@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.pool import SingletonThreadPool
 
-engine = create_engine("sqlite:///./db/db.sqlite3",
+engine = create_engine("sqlite:///./db/db.sqlite3?check_same_thread=False",
                        echo=True, poolclass=SingletonThreadPool)
 Base = declarative_base()
 

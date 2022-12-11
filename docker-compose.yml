@@ -28,7 +28,7 @@ services:
     environment:
       - "BACKEND_URL=http://localhost:7002"
       - "SCHEDULER_INTERVAL=300"
-      - "PREDICT_DUMMY=yes"
+      - "PREDICT_DUMMY=no"
 
   tensorflow-serving-backend:
     image: tensorflow/serving:latest-gpu

@@ -17,6 +17,7 @@ from PIL import Image
 import requests
 import json
 import numpy as np
+import cv2 as cv
 # if args.type == 'exec':
 app = flask.Flask(__name__)
 CORS(app)
@@ -122,8 +123,7 @@ def predict_dummy_endpoint():
 
 
 def actual_predict(img_bytes: str):
-    temp = tempfile.NamedTemporaryFile(
-        suffix='.jpg', prefix=os.path.basename(__file__))
+    temp = tempfile.NamedTemporaryFile(suffix='.jpg', prefix=os.path.basename(__file__))
     temp.write(img_bytes)
     temp.seek(0)
 
@@ -212,19 +212,31 @@ def predict_scheduler(dummy=False):
 
     for c in cameras:
         print(f'Fetching camera: {dataclasses.asdict(c)}')
-
         # Image base64
         image_base_64 = ''
+        cap = cv.VideoCapture(c.ip_address)
+        while(cap.isOpened()):
+            ret, frame = cap.read()
+            if ret==True:
+            # Capture frame
+                is_success, im_buf_arr = cv.imencode(".jpg", frame)
+                encodedFrame = im_buf_arr.tobytes()
+                # print(encodedFrame)
+                image_base_64 = base64.b64encode(encodedFrame)
+                # print(image_base_64)
+                cap.release()
+                
+                snapshot_weather(
+                    camera_id=c.id,
+                    dummy=dummy,
+                    image_base_64=image_base_64
+                )
+                cap.release()
+            else:
+                print(f'No camera result detected for camera {c.id}. Skipping.')
+                break
+    
 
-        if dummy == False and image_base_64 == '':
-            print(f'No camera result detected for camera {c.id}. Skipping.')
-            return
-
-        snapshot_weather(
-            camera_id=c.id,
-            dummy=dummy,
-            image_base_64=image_base_64
-        )
 
 
 app.run('0.0.0.0', 7002)
