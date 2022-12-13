@@ -14,7 +14,7 @@ PIXELS = 200
 def capture():
     image_base_64 = ''
     cap = cv.VideoCapture("rtsp://180.244.98.124:64000/h264_pcm.sdp")
-    while(cap.isOpened()):
+    if(cap.isOpened()):
         ret, frame = cap.read()
         if ret==True:
         # Capture frame

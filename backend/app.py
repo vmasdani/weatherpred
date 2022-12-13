@@ -215,7 +215,7 @@ def predict_scheduler(dummy=False):
         # Image base64
         image_base_64 = ''
         cap = cv.VideoCapture(c.ip_address)
-        while(cap.isOpened()):
+        if(cap.isOpened()):
             ret, frame = cap.read()
             if ret==True:
             # Capture frame
