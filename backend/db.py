@@ -1,7 +1,7 @@
 
 from dataclasses import dataclass
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, create_engine
+from sqlalchemy import Column, Integer, String, Float, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.pool import SingletonThreadPool
 
@@ -16,6 +16,8 @@ class Camera(Base):
     id: int = Column(Integer, primary_key=True,)
     name: str = Column(String)
     ip_address: str = Column(String)
+    lat: float = Column(Float)
+    lng: float = Column(Float)
     created: str = Column(String)
     deleted: str = Column(String)
 
@@ -24,6 +26,8 @@ class Camera(Base):
 
         self.name = obj.get('name')
         self.ip_address = obj.get('ip_address')
+        self.lat = obj.get('lat')
+        self.lng = obj.get('lng')
 
         self.created = obj.get('created')
         self.deleted = obj.get('deleted')

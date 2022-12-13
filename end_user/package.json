@@ -7,9 +7,12 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@vue-leaflet/vue-leaflet": "^0.7.0",
     "bootstrap": "^5.2.3",
+    "leaflet": "^1.9.3",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3"
+    "vue-router": "^4.0.3",
+    "vue3-openlayers": "^0.1.71"
   },
   "devDependencies": {
     "@vue/cli-plugin-router": "~5.0.0",
