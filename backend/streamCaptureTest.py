@@ -13,7 +13,7 @@ PIXELS = 200
 #     return base64.b64encode(frame)
 def capture():
     image_base_64 = ''
-    cap = cv.VideoCapture("192.168.1.266")
+    cap = cv.VideoCapture("rtsp://180.244.98.124:64000/h264_pcm.sdp")
     while(cap.isOpened()):
         ret, frame = cap.read()
         if ret==True:
@@ -42,7 +42,7 @@ class NpEncoder(json.JSONEncoder):
 
 def predict(b64capture: str):
 
-    categories = ["sunny", "cloudy", "foggy", "rainy", "snowy"]
+    categories = ["sunny", "cloudy", "foggy", "rainy"]
 
     # Convert arbitrary sized jpeg image to 200x200 b/w image.
     # print(b64capture)

@@ -20,8 +20,7 @@ CLASSES = {
     "sunny": 0,
     "cloudy": 1,
     "foggy": 2,
-    "rainy": 3,
-    "snowy": 4,
+    "rainy": 3
 }
 DATA_DIR = Path("../data")
 

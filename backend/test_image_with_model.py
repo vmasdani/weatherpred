@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 PIXELS = 200
-categories = ["sunny", "cloudy", "foggy", "rainy", "snowy"]
+categories = ["sunny", "cloudy", "foggy", "rainy"]
 
 # model = keras.models.load_model("./backend/model")
 
@@ -28,7 +28,7 @@ categories = ["sunny", "cloudy", "foggy", "rainy", "snowy"]
 #     imgResult = imgResult / 255.
 #     return imgResult
 
-testImagePath = 'backend/model/1/testimages/test6.jpg'
+testImagePath = '/home/idnosian/weatherpred/20882898_299365353865751_2309250804130215466_n.jpg'
 # input('Enter a file path to image: ')
 
 # prepare the image using our function

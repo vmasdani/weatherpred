@@ -131,7 +131,7 @@ def actual_predict(img_bytes: str):
     # Convert arbitrary sized jpeg image to 200x200 b/w image.
     img = Image.open(image_file)
 
-    categories = ["sunny", "cloudy", "foggy", "rainy", "snowy"]
+    categories = ["sunny", "cloudy", "foggy", "rainy"]
 
     # Convert arbitrary sized jpeg image to 200x200 b/w image.
     img = Image.open(image_file)
