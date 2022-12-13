@@ -52,6 +52,30 @@ def cameras():
     return jsonify(d)
 
 
+@app.get('/cameras-latest-prediction')
+def cameras_latest_prediction():
+    cams = session.query(Camera).all()
+
+    cams_latest_pred = []
+
+    for c in cams:
+        found_snapshot = session.query(
+            Snapshot
+        ).filter(
+            Snapshot.camera_id == c.id
+        ).order_by(
+            Snapshot.id.desc()
+        ).first()
+
+        cams_latest_pred.append({
+            'camera': c,
+            'snapshot': found_snapshot
+        })
+
+    session.close()
+    return jsonify(cams_latest_pred)
+
+
 @app.get('/snapshots')
 def snapshots():
     d = session.query(Snapshot).all()
@@ -62,7 +86,7 @@ def snapshots():
 @app.post('/cameras')
 def cameras_post():
     cam = request.get_json(force=True)
-    cam['created'] = datetime.datetime.now().isoformat()
+    cam['created'] = datetime.datetime.now().astimezone().isoformat()
 
     session.merge(Camera(cam))
     session.commit()
@@ -80,7 +104,7 @@ def cameras_post_bulk():
 
     for c in cam:
         if 'created' not in c:
-            c['created'] = datetime.datetime.now().isoformat()
+            c['created'] = datetime.datetime.now().astimezone().isoformat()
 
         session.merge(Camera(c))
 
@@ -123,7 +147,8 @@ def predict_dummy_endpoint():
 
 
 def actual_predict(img_bytes: str):
-    temp = tempfile.NamedTemporaryFile(suffix='.jpg', prefix=os.path.basename(__file__))
+    temp = tempfile.NamedTemporaryFile(
+        suffix='.jpg', prefix=os.path.basename(__file__))
     temp.write(img_bytes)
     temp.seek(0)
 
@@ -191,7 +216,7 @@ def snapshot_weather(camera_id: int, image_base_64: str, dummy=False):
         s.prediction = actual_predict(img_bytes=img_bytes)
 
     # Save snapshot
-    s.created = datetime.datetime.now().isoformat()
+    s.created = datetime.datetime.now().astimezone().isoformat()
 
     saved_snapshot = session.merge(s)
     session.commit()
@@ -206,7 +231,7 @@ def snapshot_weather(camera_id: int, image_base_64: str, dummy=False):
 
 def predict_scheduler(dummy=False):
     print(
-        f'[Periodic cam] {datetime.datetime.now().isoformat()} fetching camera snapshot...')
+        f'[Periodic cam] {datetime.datetime.now().astimezone().isoformat()} fetching camera snapshot...')
 
     cameras = session.query(Camera).all()
 
@@ -215,17 +240,17 @@ def predict_scheduler(dummy=False):
         # Image base64
         image_base_64 = ''
         cap = cv.VideoCapture(c.ip_address)
-        if(cap.isOpened()):
+        if (cap.isOpened()):
             ret, frame = cap.read()
-            if ret==True:
-            # Capture frame
+            if ret == True:
+                # Capture frame
                 is_success, im_buf_arr = cv.imencode(".jpg", frame)
                 encodedFrame = im_buf_arr.tobytes()
                 # print(encodedFrame)
                 image_base_64 = base64.b64encode(encodedFrame)
                 # print(image_base_64)
                 cap.release()
-                
+
                 snapshot_weather(
                     camera_id=c.id,
                     dummy=dummy,
@@ -234,5 +259,6 @@ def predict_scheduler(dummy=False):
                 cap.release()
         else:
             print(f'No camera result detected for camera {c.id}. Skipping.')
-    
+
+
 app.run('0.0.0.0', 7002)

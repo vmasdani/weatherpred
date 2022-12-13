@@ -64,7 +64,7 @@ init();
       >
         <tr>
           <th
-            v-for="h in ['#', 'Name', 'IP address', 'Created']"
+            v-for="h in ['#', 'Name', 'IP address', 'Lat', 'Lon', 'Created']"
             style="position: sticky; top: 0"
             class="bg-dark text-light"
           >
@@ -84,7 +84,6 @@ init();
               }
             }"
             />
-            <!-- {{ c?.name }} -->
           </td>
           <td class="border border-dark">
             <input
@@ -97,7 +96,30 @@ init();
               }
             }"
             />
-            <!-- {{ c?.ip_address }} -->
+          </td>
+          <td class="border border-dark">
+            <input
+              placeholder="Camera latitude..."
+              class="form-control form-control-sm p-1"
+              :value="c?.lat"
+              @blur="(e) => {
+              if (c && !isNaN (parseFloat((e.target as HTMLInputElement).value))) {
+                c.lat = parseFloat((e.target as HTMLInputElement).value)
+              }
+            }"
+            />
+          </td>
+          <td class="border border-dark">
+            <input
+              placeholder="Camera longitude..."
+              class="form-control form-control-sm p-1"
+              :value="c?.lng"
+              @blur="(e) => {
+              if (c && !isNaN (parseFloat((e.target as HTMLInputElement).value))) {
+                c.lng = parseFloat((e.target as HTMLInputElement).value)
+              }
+            }"
+            />
           </td>
           <td class="border border-dark">{{ c?.created }}</td>
         </tr>
