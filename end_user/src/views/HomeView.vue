@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { fetchCameras } from "@/fetchers";
+import { fetchCameras, fetchCamerasLatestPrediction } from "@/fetchers";
 import {
   LMap,
   LIcon,
@@ -19,7 +19,7 @@ let zoom = ref(11);
 let cameras = ref([] as any[]);
 
 const fetchCamerasData = async () => {
-  cameras.value = await fetchCameras();
+  cameras.value = await fetchCamerasLatestPrediction();
 };
 
 const handleInit = () => {
@@ -105,12 +105,16 @@ handleInit();
 
         <l-marker
           v-for="c in cameras"
-          :lat-lng="c.lat && c.lng ? [c.lat, c.lng] : [0, 0]"
+          :lat-lng="
+            c?.camera?.lat && c?.camera?.lng
+              ? [c.camera.lat, c.camera.lng]
+              : [0, 0]
+          "
         >
           <l-tooltip :options="{ permanent: true }">
             <div>
-              <div>{{ c?.name ?? "No name" }}</div>
-              <div><strong>sunny</strong></div>
+              <div>{{ c?.camera?.name ?? "No name" }}</div>
+              <div><strong>{{c?.snapshot?.prediction}}</strong></div>
             </div>
           </l-tooltip>
         </l-marker>
